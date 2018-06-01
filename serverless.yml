@@ -12,6 +12,13 @@ custom:
   webpack:
     webpackConfig: ./webpack.config.js
     includeModules: true
+  serverless-offline:
+    #httpsProtocol: "dev-certs"
+    port: 4002
+  webpackIncludeModules:
+    forceInclude:
+      - mysql
+      - mysql2
 
 provider:
   name: aws
@@ -23,12 +30,19 @@ provider:
   # the following line. Also, make sure to not
   # commit your env.yml.
   #
-  #environment: ${file(env.yml):${self:provider.stage}}
+  environment: ${file(env.yml):${self:provider.stage}}
 
 functions:
+  create:
+    handler: src/create.create
+    events:
+      - http:
+          path: v1/orders
+          method: post
   hello:
     handler: handler.hello
     events:
       - http:
           path: hello
           method: get
+  
